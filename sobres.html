@@ -1,0 +1,1275 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mundial de Cartas - Premium Gacha</title>
+    <style>
+        :root {
+            --bg-color: #080f18;
+            --gold: #ffd700;
+            --gold-light: #fff3a8;
+            --burgundy: #500116;
+            --burgundy-dark: #1f0007;
+            --foil-shine: linear-gradient(115deg,
+                    rgba(255, 255, 255, 0) 30%,
+                    rgba(255, 255, 255, 0.4) 48%,
+                    rgba(255, 215, 0, 0.6) 50%,
+                    rgba(255, 255, 255, 0.4) 52%,
+                    rgba(255, 255, 255, 0) 70%);
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            user-select: none;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            background-image: radial-gradient(circle at center, #13243a 0%, #080f18 100%);
+            font-family: 'Segoe UI', Roboto, sans-serif;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            overflow-x: hidden;
+            color: white;
+        }
+
+        .stage {
+            position: relative;
+            width: 100%;
+            max-width: 1100px;
+            height: 600px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            perspective: 2000px;
+        }
+
+        /* --- SOBRE (PACK) --- */
+        .pack-wrapper {
+            position: absolute;
+            z-index: 10;
+            transition: transform 0.9s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.6s ease;
+            transform-style: preserve-3d;
+        }
+
+        .pack {
+            width: 310px;
+            height: 450px;
+            background: linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            border: 4px solid var(--gold);
+            border-radius: 14px;
+            position: relative;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.8);
+            cursor: pointer;
+            overflow: hidden;
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+
+        .pack::after {
+            content: '';
+            position: absolute;
+            top: -150%;
+            left: -150%;
+            width: 400%;
+            height: 400%;
+            background: var(--foil-shine);
+            transform: rotate(25deg);
+            animation: packShine 5s infinite linear;
+            pointer-events: none;
+        }
+
+        @keyframes packShine {
+            0% {
+                transform: translate(-20%, -20%) rotate(25deg);
+            }
+
+            100% {
+                transform: translate(20%, 20%) rotate(25deg);
+            }
+        }
+
+        .pack:hover {
+            transform: scale(1.04) rotateY(10deg) rotateX(5deg);
+            box-shadow: 0 40px 70px rgba(0, 0, 0, 0.9), 0 0 30px rgba(255, 215, 0, 0.2);
+        }
+
+        .crimp {
+            position: absolute;
+            left: 0;
+            width: 100%;
+            height: 16px;
+            background: repeating-linear-gradient(90deg, #2c000a, #2c000a 4px, var(--gold) 4px, var(--gold) 8px);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.5);
+            z-index: 5;
+        }
+
+        .crimp-top {
+            top: 0;
+        }
+
+        .crimp-bottom {
+            bottom: 0;
+            border-bottom: none;
+            border-top: 2px solid rgba(0, 0, 0, 0.5);
+        }
+
+        .pack-layout {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .fifa-logo {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 3px 12px;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.2);
+        }
+
+        .pack-title {
+            font-size: 24px;
+            font-weight: 900;
+            letter-spacing: 1px;
+            background: linear-gradient(to bottom, #ffffff 40%, var(--gold) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8));
+        }
+
+        .logo-center-box {
+            width: 220px;
+            height: 260px;
+            background: radial-gradient(circle, rgba(138, 0, 37, 0.6) 0%, rgba(0, 0, 0, 0.5) 100%);
+            border-radius: 12px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            border: 2px solid var(--gold);
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .logo-center-box img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .pack-edition {
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 3px;
+            background: linear-gradient(90deg, transparent, rgba(255, 215, 0, 0.25), transparent);
+            width: 100%;
+            padding: 5px 0;
+            border-top: 1px solid rgba(255, 215, 0, 0.2);
+            border-bottom: 1px solid rgba(255, 215, 0, 0.2);
+        }
+
+        .pack-footer {
+            font-size: 11px;
+            font-weight: 600;
+            color: var(--gold-light);
+        }
+
+        /* --- ESTADO ABIERTO --- */
+        .stage.opened .pack-wrapper {
+            transform: translateY(-700px) scale(0.4) rotateX(60deg);
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        /* --- CARTAS --- */
+        .cards-container {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 16px;
+            pointer-events: none;
+            opacity: 0;
+            transform: scale(0.75);
+            transition: all 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        .stage.opened .cards-container {
+            opacity: 1;
+            pointer-events: auto;
+            transform: scale(1);
+        }
+
+        .card-wrapper {
+            width: 195px;
+            height: 280px;
+            flex-shrink: 0;
+            perspective: 1000px;
+        }
+
+        .card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            transform-style: preserve-3d;
+            animation: cardFlip 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) backwards;
+        }
+
+        @keyframes cardFlip {
+            0% {
+                transform: rotateY(180deg) translateY(40px) scale(0.85);
+            }
+            100% {
+                transform: rotateY(0deg) translateY(0) scale(1);
+            }
+        }
+
+        .card-front,
+        .card-back {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            backface-visibility: hidden;
+            border-radius: 12px;
+        }
+
+        .card-back {
+            background: linear-gradient(145deg, var(--burgundy) 0%, var(--burgundy-dark) 100%);
+            border: 3px solid var(--gold);
+            transform: rotateY(180deg);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 20px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+            overflow: hidden;
+        }
+
+        .card-back::after {
+            content: '';
+            position: absolute;
+            top: -150%;
+            left: -150%;
+            width: 400%;
+            height: 400%;
+            background: var(--foil-shine);
+            transform: rotate(25deg);
+            animation: packShine 5s infinite linear;
+            pointer-events: none;
+        }
+
+        .card-back-logo {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 4px;
+            color: var(--gold);
+            border: 1px solid var(--gold);
+            padding: 3px 12px;
+            border-radius: 3px;
+            background: rgba(0, 0, 0, 0.2);
+            z-index: 1;
+        }
+
+        .card-back-title {
+            font-size: 18px;
+            font-weight: 900;
+            color: var(--gold);
+            text-align: center;
+            z-index: 1;
+            filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8));
+        }
+
+        .card-back-stars {
+            font-size: 20px;
+            color: var(--gold);
+            letter-spacing: 6px;
+            z-index: 1;
+        }
+
+        .card-back-footer {
+            font-size: 9px;
+            font-weight: 600;
+            color: var(--gold-light);
+            z-index: 1;
+        }
+
+        .card-wrapper:hover .card-inner {
+            transform: scale(1.22) translateY(-35px);
+            z-index: 10;
+            transition: transform 0.3s ease;
+        }
+
+        .card-wrapper:hover .card-front {
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.7);
+        }
+
+        .card {
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, #111d2c 0%, #070d14 100%);
+            border: 3px solid #cbd5e1;
+            border-radius: 12px;
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
+        }
+
+        .card.full-img {
+            padding: 0;
+            background: none;
+            justify-content: flex-end;
+        }
+
+        .card.full-img > .card-bg-img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+            border-radius: 9px;
+            z-index: 0;
+        }
+
+        .card.full-img .card-header,
+        .card.full-img .card-photo-area {
+            display: none;
+        }
+
+        .card.full-img .player-data {
+            background: linear-gradient(transparent, rgba(0,0,0,0.85));
+            border: none;
+            border-radius: 0 0 9px 9px;
+            padding: 30px 10px 10px;
+            margin-top: auto;
+            position: relative;
+            z-index: 1;
+        }
+
+        .card.full-img .player-meta,
+        .card.full-img .stats-grid,
+        .card.full-img .player-name {
+            display: none;
+        }
+
+        .card.full-img .silhouette {
+            display: none;
+        }
+
+        /* DISEÑO DE CARTAS SEGÚN RAREZA */
+        .card.rarity-escudo {
+            border-color: #a855f7;
+            background: linear-gradient(135deg, #1a0e2e 0%, #0d0518 100%);
+        }
+
+        .card.rarity-especial {
+            border-color: #00d2ff;
+            background: linear-gradient(135deg, #0c2540 0%, #040e1a 100%);
+        }
+
+        /* DISEÑO ESPECIAL INTERACTIVO: LEGENDARIA */
+        .card.rarity-legendaria {
+            border-color: var(--gold);
+            background: linear-gradient(135deg, #2b040e 0%, #460517 50%, #110006 100%);
+            animation: cardGlowLegendary 3s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        /* Efecto destello aura dorada */
+        @keyframes cardGlowLegendary {
+            0% {
+                box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 215, 0, 0.3);
+            }
+
+            100% {
+                box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), 0 0 25px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 243, 168, 0.4);
+            }
+        }
+
+        /* Brillo de barrido holográfico constante para leyendas */
+        .card.rarity-legendaria::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 255, 255, 0.4) 50%, rgba(255, 215, 0, 0.3) 55%, rgba(255, 255, 255, 0) 65%);
+            transform: rotate(15deg);
+            animation: holoSweep 4s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 4;
+        }
+
+        @keyframes holoSweep {
+            0% {
+                transform: translate(-20%, -20%) rotate(15deg);
+            }
+
+            100% {
+                transform: translate(20%, 20%) rotate(15deg);
+            }
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0) 0%, rgba(255, 255, 255, 0.25) 50%, rgba(255, 255, 255, 0) 100%);
+            background-size: 200% 200%;
+            background-position: -100% -100%;
+            transition: background-position 0.5s ease;
+            z-index: 3;
+            pointer-events: none;
+        }
+
+        .card-wrapper:hover .card::before {
+            background-position: 100% 100%;
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 9px;
+            font-weight: bold;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+            padding-bottom: 4px;
+        }
+
+        .card-rarity {
+            background: #cbd5e1;
+            color: black;
+            padding: 1px 5px;
+            border-radius: 2px;
+            font-size: 8px;
+            text-transform: uppercase;
+            font-weight: bold;
+        }
+
+        .card.rarity-legendaria .card-rarity {
+            background: var(--gold);
+            text-shadow: 0 0 2px white;
+        }
+
+        .card.rarity-especial .card-rarity {
+            background: #00d2ff;
+        }
+
+        .card-logo-mini {
+            width: 22px;
+            height: 26px;
+        }
+
+        .card-photo-area {
+            width: 100%;
+            height: 125px;
+            background: linear-gradient(to bottom, #192d47, #09131f);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 6px;
+            margin: 5px 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card-photo-area img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            display: block;
+        }
+
+        .card.rarity-legendaria .card-photo-area {
+            background: linear-gradient(to bottom, #70041e, #000);
+            border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .silhouette {
+            width: 85px;
+            height: 105px;
+            fill: #ffffff;
+            opacity: 0.15;
+            z-index: 2;
+        }
+
+        /* Partículas de destellos internos solo para leyendas */
+        .sparkle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: var(--gold-light);
+            border-radius: 50%;
+            opacity: 0;
+            animation: floatSparkle 2s infinite ease-in-out;
+        }
+
+        @keyframes floatSparkle {
+            0% {
+                transform: translateY(10px) scale(0);
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateY(-30px) scale(1.3);
+                filter: drop-shadow(0 0 3px var(--gold));
+            }
+
+            100% {
+                transform: translateY(-65px) scale(0);
+                opacity: 0;
+            }
+        }
+
+        .player-data {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 4px;
+            padding: 4px;
+            text-align: center;
+            z-index: 5;
+        }
+
+        .card.rarity-legendaria .player-data {
+            border-color: rgba(255, 215, 0, 0.25);
+            background: rgba(31, 0, 7, 0.6);
+        }
+
+        .player-name {
+            font-size: 12px;
+            font-weight: 800;
+            text-transform: uppercase;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .player-meta {
+            font-size: 8px;
+            color: #a0aab5;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 3px;
+            margin-top: 4px;
+            font-size: 9px;
+        }
+
+        .stat-el {
+            background: rgba(255, 255, 255, 0.04);
+            padding: 2px;
+            border-radius: 2px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .stat-num {
+            color: #fff;
+            font-weight: bold;
+        }
+
+        .card.rarity-legendaria .stat-num {
+            color: var(--gold);
+            text-shadow: 0 0 3px rgba(255, 215, 0, 0.4);
+        }
+
+        .card.rarity-especial .stat-num {
+            color: #00d2ff;
+        }
+
+        .stat-lbl {
+            font-size: 6.5px;
+            color: #828e9a;
+            text-transform: uppercase;
+        }
+
+        .info-text {
+            margin-top: 20px;
+            font-size: 13px;
+            letter-spacing: 2px;
+            color: #828e9a;
+            text-transform: uppercase;
+            font-weight: bold;
+            animation: pulse 2.5s infinite;
+        }
+
+        @keyframes pulse {
+
+            0%,
+            100% {
+                opacity: 0.4;
+            }
+
+            50% {
+                opacity: 1;
+            }
+        }
+
+        /* --- LEGENDARY REVEAL --- */
+        @keyframes stageShake {
+            0%, 100% { transform: translateX(0); }
+            10% { transform: translateX(-8px) rotate(-1deg); }
+            20% { transform: translateX(8px) rotate(1deg); }
+            30% { transform: translateX(-6px) rotate(-0.5deg); }
+            40% { transform: translateX(6px) rotate(0.5deg); }
+            50% { transform: translateX(-4px); }
+            60% { transform: translateX(4px); }
+            70% { transform: translateX(-2px); }
+            80% { transform: translateX(2px); }
+        }
+
+        .stage.legendary-reveal {
+            animation: stageShake 0.6s ease;
+        }
+
+        .legendary-particle {
+            position: fixed;
+            width: 8px;
+            height: 8px;
+            background: var(--gold);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 100;
+            box-shadow: 0 0 6px var(--gold), 0 0 12px rgba(255, 215, 0, 0.5);
+            animation: particleBurst 1s ease-out forwards;
+        }
+
+        @keyframes particleBurst {
+            0% {
+                opacity: 1;
+                transform: translate(0, 0) scale(1);
+            }
+            100% {
+                opacity: 0;
+                transform: translate(var(--dx), var(--dy)) scale(0);
+            }
+        }
+
+        .btn-reset {
+            margin-top: 15px;
+            padding: 8px 22px;
+            background: transparent;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: bold;
+            text-transform: uppercase;
+            font-size: 11px;
+            opacity: 0;
+            pointer-events: none;
+            transition: 0.3s;
+        }
+
+        .stage.opened~.btn-reset {
+            opacity: 1;
+            pointer-events: auto;
+        }
+
+        .btn-reset:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 12px var(--gold);
+        }
+
+        .page-header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 18px 30px;
+            z-index: 50;
+            pointer-events: none;
+        }
+
+        .header-left {
+            font-size: 22px;
+            font-weight: 900;
+            letter-spacing: 6px;
+            background: linear-gradient(
+                to right,
+                #ffffff 0%,
+                #ffffff 25%,
+                var(--gold-light) 40%,
+                var(--gold) 50%,
+                var(--gold-light) 60%,
+                #ffffff 75%,
+                #ffffff 100%
+            );
+            background-size: 200% 100%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            filter: drop-shadow(2px 2px 3px rgba(0, 0, 0, 0.8));
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            animation: headerShimmer 4s ease-in-out infinite;
+        }
+
+        @keyframes headerShimmer {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .header-logo {
+            width: 32px;
+            height: 32px;
+            object-fit: contain;
+            display: block;
+            -webkit-text-fill-color: initial;
+            animation: spinLogo 3s linear infinite;
+            transform-style: preserve-3d;
+            perspective: 200px;
+        }
+
+        @keyframes spinLogo {
+            0% { transform: rotateY(0deg); }
+            100% { transform: rotateY(360deg); }
+        }
+
+        .header-right {
+            font-size: 13px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            color: var(--gold-light);
+            opacity: 0.7;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .album-nav {
+            display: flex;
+            gap: 12px;
+            margin-top: 75px;
+            margin-bottom: 5px;
+            z-index: 10;
+        }
+
+        .album-nav a {
+            padding: 8px 20px;
+            border: 2px solid var(--gold);
+            color: var(--gold);
+            text-decoration: none;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            letter-spacing: 2px;
+            text-transform: uppercase;
+            transition: 0.3s;
+        }
+
+        .album-nav a:hover {
+            background: var(--gold);
+            color: black;
+            box-shadow: 0 0 12px var(--gold);
+        }
+
+        .album-nav a.active {
+            background: var(--gold);
+            color: black;
+        }
+
+        .ball-spin {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+            display: block;
+            animation: spinBall 3s linear infinite;
+        }
+
+        @keyframes spinBall {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* --- STATS PANEL --- */
+        .stats-panel {
+            margin-top: 25px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 215, 0, 0.15);
+            border-radius: 12px;
+            padding: 14px 24px;
+            min-width: 500px;
+            backdrop-filter: blur(8px);
+        }
+
+        .stats-title {
+            font-size: 10px;
+            font-weight: 800;
+            letter-spacing: 3px;
+            color: var(--gold);
+            text-align: center;
+            margin-bottom: 10px;
+            opacity: 0.7;
+        }
+
+        .stats-row {
+            display: flex;
+            justify-content: space-around;
+            gap: 20px;
+        }
+
+        .stat-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 2px;
+        }
+
+        .stat-icon {
+            font-size: 14px;
+            line-height: 1;
+        }
+
+        .stat-icon-normal { color: #cbd5e1; }
+        .stat-icon-escudo { color: #a855f7; }
+        .stat-icon-especial { color: #00d2ff; }
+        .stat-icon-legendaria { color: var(--gold); }
+
+        .stat-value {
+            font-size: 22px;
+            font-weight: 900;
+            color: #fff;
+            line-height: 1.2;
+        }
+
+        .stat-label {
+            font-size: 9px;
+            font-weight: 600;
+            color: #828e9a;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+        /* --- PARTÍCULAS DE FONDO --- */
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .particle {
+            position: absolute;
+            width: 3px;
+            height: 3px;
+            background: #fff;
+            border-radius: 50%;
+            opacity: 0;
+            animation: particleFloat linear infinite;
+        }
+
+        @keyframes particleFloat {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            10% { opacity: 0.5; }
+            90% { opacity: 0.5; }
+            100% { transform: translateY(-5vh) scale(1); opacity: 0; }
+        }
+
+        /* --- EFECTO HOLO EN CARTAS --- */
+        .card-wrapper:hover .card::before {
+            background: linear-gradient(135deg,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 100, 100, 0.25) 15%,
+                rgba(255, 255, 100, 0.25) 30%,
+                rgba(100, 255, 100, 0.25) 45%,
+                rgba(100, 255, 255, 0.25) 60%,
+                rgba(100, 100, 255, 0.25) 75%,
+                rgba(255, 100, 255, 0.25) 90%,
+                rgba(255, 255, 255, 0) 100%);
+            background-size: 300% 300%;
+            background-position: 100% 100%;
+            opacity: 0.6;
+        }
+
+        .card-wrapper:hover .card.full-img {
+            filter: brightness(1.15) saturate(1.2);
+            transition: filter 0.3s ease;
+        }
+
+        .card-wrapper:hover .card.full-img::before {
+            opacity: 0.75;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="particles" id="particles"></div>
+
+    <div class="page-header">
+        <span class="header-left"><img class="header-logo" src="imagenes/carta.png" alt=""> HYPERION</span>
+        <span class="header-right"><img class="ball-spin" src="imagenes/trionda.png" alt=""> #HyperionWorldCup</span>
+    </div>
+
+    <div class="album-nav">
+        <a href="sobres.html" class="active">🎁 Sobres</a>
+        <a href="album.html">📖 Álbum</a>
+    </div>
+
+    <div class="stage" id="mainStage">
+
+        <div class="pack-wrapper" onclick="openPack()">
+            <div class="pack">
+                <div class="crimp crimp-top"></div>
+                <div class="pack-layout">
+                    <div class="fifa-logo">HYPERION WORLD CUP</div>
+                    <h1 class="pack-title">MUNDIAL DE CARTAS</h1>
+
+                    <div class="logo-center-box">
+                        <img src="imagenes/carta.png" alt="">
+                    </div>
+
+                    <div class="pack-edition">HYPERION LIMIT EDITION</div>
+                    <div class="pack-footer">CONTIENE 5 CARTAS PREMIUM</div>
+                </div>
+                <div class="crimp crimp-bottom"></div>
+            </div>
+        </div>
+
+        <div class="cards-container" id="cardsContainer"></div>
+    </div>
+
+    <div class="info-text" id="hint">Haz clic en el sobre para abrirlo</div>
+    <button class="btn-reset" onclick="closePack()">Cerrar Sobre</button>
+
+    <div class="stats-panel">
+        <div class="stats-title">ESTADÍSTICAS</div>
+        <div class="stats-row">
+            <div class="stat-item">
+                <span class="stat-icon">📦</span>
+                <span class="stat-value" id="statPacks">0</span>
+                <span class="stat-label">Sobres</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon stat-icon-normal">⬤</span>
+                <span class="stat-value" id="statNormal">0</span>
+                <span class="stat-label">Normal</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon stat-icon-especial">⬤</span>
+                <span class="stat-value" id="statEspecial">0</span>
+                <span class="stat-label">Especial</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon stat-icon-escudo">⬤</span>
+                <span class="stat-value" id="statEscudo">0</span>
+                <span class="stat-label">Escudo</span>
+            </div>
+            <div class="stat-item">
+                <span class="stat-icon stat-icon-legendaria">⬤</span>
+                <span class="stat-value" id="statLegendaria">0</span>
+                <span class="stat-label">Legendaria</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // POOL COMPLETO DE CARTAS
+        const poolCartas = [
+            // --- CARTAS PERSONALIZADAS ---
+            { id: 1, name: "Ester", meta: "Jugadora • ESP", rarity: "normal", s1: "85 RIT", s2: "82 TIR", s3: "80 PAS", img: "imagenes/Carta base/Ester-base.jpg", fullImg: true },
+            { id: 2, name: "Hannah", meta: "Jugadora • ???", rarity: "normal", s1: "83 RIT", s2: "80 TIR", s3: "81 PAS", img: "imagenes/Carta base/Hannah-base.jpg", fullImg: true },
+            { id: 3, name: "Osita", meta: "Jugadora • ???", rarity: "normal", s1: "82 RIT", s2: "84 TIR", s3: "79 PAS", img: "imagenes/Carta base/Osita-base.jpg", fullImg: true },
+            { id: 4, name: "Jade", meta: "Jugadora • ???", rarity: "normal", s1: "86 RIT", s2: "81 TIR", s3: "83 PAS", img: "imagenes/Carta base/Jade-base.jpg", fullImg: true },
+            { id: 5, name: "Miubi", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "83 TIR", s3: "82 PAS", img: "imagenes/Carta base/Miubi-base.jpg", fullImg: true },
+            { id: 6, name: "Loore", meta: "Jugadora • ???", rarity: "normal", s1: "81 RIT", s2: "85 TIR", s3: "80 PAS", img: "imagenes/Carta base/Loore-base.jpg", fullImg: true },
+            { id: 7, name: "Jora", meta: "Jugadora • ???", rarity: "normal", s1: "87 RIT", s2: "84 TIR", s3: "83 PAS", img: "imagenes/Carta base/Jora-base.jpg", fullImg: true },
+            { id: 8, name: "Ester", meta: "Jugadora • ESP", rarity: "especial", s1: "90 RIT", s2: "88 TIR", s3: "85 PAS", img: "imagenes/Carta especial/Ester-especial.jpg", fullImg: true },
+            { id: 9, name: "Night", meta: "Jugadora • ???", rarity: "legendaria", s1: "95 RIT", s2: "97 TIR", s3: "93 PAS", img: "imagenes/Carta legendaria/Night-legendaria.jpg", fullImg: true },
+            { id: 10, name: "Fiire", meta: "Jugadora • ???", rarity: "legendaria", s1: "96 RIT", s2: "95 TIR", s3: "94 PAS", img: "imagenes/Carta legendaria/Fiire-legendaria.jpg", fullImg: true },
+            { id: 11, name: "Hannah", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "85 TIR", s3: "86 PAS", img: "imagenes/Carta especial/Hannah-especial.jpg", fullImg: true },
+            { id: 12, name: "Jora", meta: "Jugadora • ???", rarity: "especial", s1: "92 RIT", s2: "89 TIR", s3: "88 PAS", img: "imagenes/Carta especial/Jora-especial.jpg", fullImg: true },
+            { id: 13, name: "Lana", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "87 TIR", s3: "85 PAS", img: "imagenes/Carta especial/Lana-especial.jpg", fullImg: true },
+
+            { id: 14, name: "Blon", meta: "Jugadora • ???", rarity: "normal", s1: "83 RIT", s2: "81 TIR", s3: "84 PAS", img: "imagenes/Carta base/Blon-base.jpg", fullImg: true },
+            { id: 15, name: "Fueguitos", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "82 TIR", s3: "80 PAS", img: "imagenes/Carta base/Fueguitos-base.jpg", fullImg: true },
+            { id: 16, name: "Syd", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "83 TIR", s3: "82 PAS", img: "imagenes/Carta base/Syd-base.jpg", fullImg: true },
+
+            { id: 17, name: "Blon", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "86 TIR", s3: "89 PAS", img: "imagenes/Carta especial/Blon-especial.jpg", fullImg: true },
+            { id: 18, name: "Fueguitos", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "87 TIR", s3: "85 PAS", img: "imagenes/Carta especial/Fueguitos-especial.jpg", fullImg: true },
+            { id: 19, name: "Jade", meta: "Jugadora • ???", rarity: "especial", s1: "91 RIT", s2: "86 TIR", s3: "88 PAS", img: "imagenes/Carta especial/Jade-especial.jpg", fullImg: true },
+            { id: 20, name: "Miubi", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "88 TIR", s3: "87 PAS", img: "imagenes/Carta especial/Miubi-especial.jpg", fullImg: true },
+            { id: 21, name: "Syd", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "87 TIR", s3: "86 PAS", img: "imagenes/Carta especial/Syd-especial.jpg", fullImg: true },
+
+            { id: 22, name: "Alma", meta: "Jugadora • ???", rarity: "legendaria", s1: "97 RIT", s2: "96 TIR", s3: "95 PAS", img: "imagenes/Carta legendaria/Alma-legendaria.jpg", fullImg: true },
+            { id: 23, name: "Jora", meta: "Jugadora • ???", rarity: "legendaria", s1: "98 RIT", s2: "97 TIR", s3: "96 PAS", img: "imagenes/Carta legendaria/Jora-legendaria.jpg", fullImg: true },
+            { id: 24, name: "Loore", meta: "Jugadora • ???", rarity: "legendaria", s1: "96 RIT", s2: "95 TIR", s3: "97 PAS", img: "imagenes/Carta legendaria/Loore-legendaria.jpg", fullImg: true },
+            { id: 25, name: "Hannah", meta: "Jugadora • ???", rarity: "legendaria", s1: "97 RIT", s2: "96 TIR", s3: "94 PAS", img: "imagenes/Carta legendaria/Hannah-legendaria.jpg", fullImg: true },
+            { id: 26, name: "Fiire", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "84 TIR", s3: "83 PAS", img: "imagenes/Carta base/Fiire-base.jpg", fullImg: true },
+            { id: 27, name: "Fiire", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "89 TIR", s3: "88 PAS", img: "imagenes/Carta especial/Fiire-especial.jpg", fullImg: true },
+            { id: 28, name: "Night", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "82 TIR", s3: "86 PAS", img: "imagenes/Carta base/Night-base.jpg", fullImg: true },
+            { id: 29, name: "Vaquita", meta: "Jugadora • ???", rarity: "normal", s1: "83 RIT", s2: "81 TIR", s3: "85 PAS", img: "imagenes/Carta base/Vaquita-base.jpg", fullImg: true },
+            { id: 30, name: "Vaquita", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "86 TIR", s3: "90 PAS", img: "imagenes/Carta especial/Vaquita-especial.jpg", fullImg: true },
+            { id: 31, name: "Osita", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "89 TIR", s3: "85 PAS", img: "imagenes/Carta especial/Osita-especial.jpg", fullImg: true },
+            { id: 32, name: "Cr7", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "83 TIR", s3: "85 PAS", img: "imagenes/Carta base/Cr7-base.jpg", fullImg: true },
+            { id: 33, name: "Ever", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "82 TIR", s3: "84 PAS", img: "imagenes/Carta base/Ever-base.jpg", fullImg: true },
+            { id: 34, name: "John", meta: "Jugadora • ???", rarity: "normal", s1: "86 RIT", s2: "84 TIR", s3: "83 PAS", img: "imagenes/Carta base/John-base.jpg", fullImg: true },
+            { id: 35, name: "Irwin", meta: "Jugadora • ???", rarity: "normal", s1: "83 RIT", s2: "85 TIR", s3: "82 PAS", img: "imagenes/Carta base/Irwin-base.jpg", fullImg: true },
+            { id: 36, name: "Enzo", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "86 TIR", s3: "81 PAS", img: "imagenes/Carta base/Enzo-base.jpg", fullImg: true },
+            { id: 37, name: "Fede", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "83 TIR", s3: "84 PAS", img: "imagenes/Carta base/Fede-base.jpg", fullImg: true },
+            { id: 38, name: "John", meta: "Jugadora • ???", rarity: "especial", s1: "91 RIT", s2: "89 TIR", s3: "88 PAS", img: "imagenes/Carta especial/John-especial.jpg", fullImg: true },
+            { id: 39, name: "Irwin", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "90 TIR", s3: "87 PAS", img: "imagenes/Carta especial/Irwin-especial.jpg", fullImg: true },
+            { id: 40, name: "Ever", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "87 TIR", s3: "89 PAS", img: "imagenes/Carta especial/Ever-especial.jpg", fullImg: true },
+            { id: 41, name: "Enzo", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "91 TIR", s3: "86 PAS", img: "imagenes/Carta especial/Enzo-especial.jpg", fullImg: true },
+            { id: 42, name: "Cr7", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "88 TIR", s3: "89 PAS", img: "imagenes/Carta especial/Cr7-especial.jpg", fullImg: true },
+            { id: 53, name: "Lana", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "83 TIR", s3: "82 PAS", img: "imagenes/Carta base/Lana-base.jpg", fullImg: true },
+
+            // --- ESCUDOS ---
+            { id: 43, name: "Hyperion", meta: "Escudo • HYPERION", rarity: "escudo", s1: "99 POD", s2: "99 HON", s3: "99 GLORY", img: "imagenes/escudos/Hyperion-escudo.jpg", fullImg: true },
+            { id: 44, name: "Argentina", meta: "Escudo • ARG", rarity: "escudo", s1: "98 POD", s2: "97 HON", s3: "96 GLORY", img: "imagenes/escudos/Argentina-escudo.jpg", fullImg: true },
+            { id: 45, name: "Brasil", meta: "Escudo • BRA", rarity: "escudo", s1: "97 POD", s2: "98 HON", s3: "95 GLORY", img: "imagenes/escudos/Brasil-escudo.jpg", fullImg: true },
+            { id: 46, name: "Italia", meta: "Escudo • ITA", rarity: "escudo", s1: "92 POD", s2: "90 HON", s3: "91 GLORY", img: "imagenes/escudos/Italia-escudo.jpg", fullImg: true },
+            { id: 47, name: "Colombia", meta: "Escudo • COL", rarity: "escudo", s1: "90 POD", s2: "89 HON", s3: "88 GLORY", img: "imagenes/escudos/Colombia-escudo.jpg", fullImg: true },
+            { id: 48, name: "México", meta: "Escudo • MEX", rarity: "escudo", s1: "86 POD", s2: "85 HON", s3: "84 GLORY", img: "imagenes/escudos/Escudo-mexico.jpg", fullImg: true },
+            { id: 49, name: "El Salvador", meta: "Escudo • SLV", rarity: "escudo", s1: "85 POD", s2: "84 HON", s3: "83 GLORY", img: "imagenes/escudos/El-Salvador-escudo.jpg", fullImg: true },
+            { id: 50, name: "Uruguay", meta: "Escudo • URU", rarity: "escudo", s1: "91 POD", s2: "90 HON", s3: "89 GLORY", img: "imagenes/escudos/Uruguay-escudo.jpg", fullImg: true },
+
+            // --- ÍTEMS LEGENDARIOS ---
+            { id: 51, name: "Balón Oficial", meta: "Ítem • World Cup", rarity: "legendaria", s1: "99 LEG", s2: "99 HIS", s3: "99 GLORY", img: "imagenes/Carta legendaria/Balon-Oficial.jpg", fullImg: true },
+            { id: 52, name: "Trofeo Oficial", meta: "Ítem • World Cup", rarity: "legendaria", s1: "99 LEG", s2: "99 HIS", s3: "99 GLORY", img: "imagenes/Carta legendaria/Trofeo-Oficial.jpg", fullImg: true }
+        ];
+
+        // PARTÍCULAS DE FONDO
+        function crearParticulas() {
+            const container = document.getElementById('particles');
+            for (let i = 0; i < 50; i++) {
+                const p = document.createElement('div');
+                p.classList.add('particle');
+                p.style.left = Math.random() * 100 + '%';
+                const size = 1 + Math.random() * 3;
+                p.style.width = size + 'px';
+                p.style.height = size + 'px';
+                p.style.animationDuration = (10 + Math.random() * 20) + 's';
+                p.style.animationDelay = (Math.random() * 20) + 's';
+                p.style.background = Math.random() > 0.7 ? 'var(--gold)' : 'rgba(255,255,255,0.6)';
+                container.appendChild(p);
+            }
+        }
+        crearParticulas();
+
+        const logoSVG = `<svg class="card-logo-mini" viewBox="0 0 140 180" xmlns="http://www.w3.org/2000/svg"><path d="M 20,30 L 44,30 L 44,38 L 34,38 L 34,142 L 44,142 L 44,150 L 20,150 Z M 96,30 L 120,30 L 120,38 L 115,38 L 115,142 L 120,142 L 120,150 L 96,150 Z M 52,30 L 82,30 L 82,85 L 52,73 Z M 58,107 L 88,119 L 88,150 L 58,150 Z M 25,82 L 115,116 L 115,98 L 25,64 Z" fill="currentColor"/></svg>`;
+
+        // ESTADÍSTICAS
+        let stats = { packs: 0, normal: 0, especial: 0, escudo: 0, legendaria: 0 };
+
+        function actualizarStats() {
+            document.getElementById('statPacks').textContent = stats.packs;
+            document.getElementById('statNormal').textContent = stats.normal;
+            document.getElementById('statEspecial').textContent = stats.especial;
+            document.getElementById('statEscudo').textContent = stats.escudo;
+            document.getElementById('statLegendaria').textContent = stats.legendaria;
+        }
+
+        // ALGORITMO GACHA (75% Normal, 15% Especial, 9% Escudo, 1% Legendaria)
+        function generarCartasSobre() {
+            const poolNormal = poolCartas.filter(c => c.rarity === "normal");
+            const poolEspecial = poolCartas.filter(c => c.rarity === "especial");
+            const poolEscudo = poolCartas.filter(c => c.rarity === "escudo");
+            const poolLegendario = poolCartas.filter(c => c.rarity === "legendaria");
+
+            let seleccionadas = [];
+
+            for (let i = 0; i < 5; i++) {
+                let dadoRareza = Math.random();
+                let poolDisponible;
+
+                if (dadoRareza < 0.75) {
+                    poolDisponible = poolNormal;
+                } else if (dadoRareza < 0.90) {
+                    poolDisponible = poolEspecial;
+                } else if (dadoRareza < 0.99) {
+                    poolDisponible = poolEscudo;
+                } else {
+                    poolDisponible = poolLegendario;
+                }
+
+                let permiteRepetir = Math.random() < 0.20;
+                let cartaCandidata;
+
+                if (!permiteRepetir && seleccionadas.length > 0) {
+                    let poolFiltrado = poolDisponible.filter(c => !seleccionadas.some(s => s.id === c.id));
+                    if (poolFiltrado.length === 0) poolFiltrado = poolDisponible;
+                    cartaCandidata = poolFiltrado[Math.floor(Math.random() * poolFiltrado.length)];
+                } else {
+                    cartaCandidata = poolDisponible[Math.floor(Math.random() * poolDisponible.length)];
+                }
+                seleccionadas.push(cartaCandidata);
+            }
+            return seleccionadas;
+        }
+
+        function crearBrillosEspeciales(contenedorFoto) {
+            const numeroDeBrillos = 10;
+            for (let i = 0; i < numeroDeBrillos; i++) {
+                const brillo = document.createElement('div');
+                brillo.classList.add('sparkle');
+                brillo.style.left = `${Math.random() * 85 + 5}%`;
+                brillo.style.bottom = `${Math.random() * 40}%`;
+                brillo.style.animationDelay = `${Math.random() * 1.5}s`;
+                contenedorFoto.appendChild(brillo);
+            }
+        }
+
+        function triggerLegendaryReveal(cardWrapper, name) {
+            const stage = document.getElementById('mainStage');
+            stage.classList.remove('legendary-reveal');
+            void stage.offsetWidth;
+            stage.classList.add('legendary-reveal');
+            setTimeout(() => stage.classList.remove('legendary-reveal'), 700);
+
+            document.getElementById('hint').innerHTML = `¡LEYENDA! ${name} ✦`;
+
+            const rect = cardWrapper.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+
+            for (let i = 0; i < 30; i++) {
+                const p = document.createElement('div');
+                p.classList.add('legendary-particle');
+                const angle = Math.random() * 360;
+                const dist = 80 + Math.random() * 220;
+                p.style.left = cx + 'px';
+                p.style.top = cy + 'px';
+                p.style.setProperty('--dx', Math.cos(angle) * dist + 'px');
+                p.style.setProperty('--dy', Math.sin(angle) * dist + 'px');
+                p.style.width = (4 + Math.random() * 6) + 'px';
+                p.style.height = p.style.width;
+                p.style.background = Math.random() > 0.5 ? 'var(--gold)' : '#fff';
+                document.body.appendChild(p);
+                setTimeout(() => p.remove(), 1200);
+            }
+        }
+
+        function openPack() {
+            const container = document.getElementById('cardsContainer');
+            container.innerHTML = "";
+
+            const cartasObtenidas = generarCartasSobre();
+
+            // Guardar en álbum
+            const idsActuales = JSON.parse(localStorage.getItem('hyperion_coleccion')) || [];
+            cartasObtenidas.forEach(c => {
+                if (!idsActuales.includes(c.id)) idsActuales.push(c.id);
+            });
+            localStorage.setItem('hyperion_coleccion', JSON.stringify(idsActuales));
+
+            stats.packs++;
+            cartasObtenidas.forEach(c => { stats[c.rarity]++; });
+            actualizarStats();
+            const fragment = document.createDocumentFragment();
+
+            cartasObtenidas.forEach((carta, i) => {
+                const wrapper = document.createElement('div');
+                wrapper.classList.add('card-wrapper');
+
+                const inner = document.createElement('div');
+                inner.classList.add('card-inner');
+                inner.style.animationDelay = `${0.15 + i * 0.12}s`;
+
+                const front = document.createElement('div');
+                front.classList.add('card-front');
+
+                front.innerHTML = `
+                    <div class="card rarity-${carta.rarity}${carta.fullImg ? ' full-img' : ''}"${carta.img ? ` style="border-color: ${carta.rarity === 'especial' ? '#00d2ff' : carta.rarity === 'escudo' ? '#a855f7' : carta.rarity === 'legendaria' ? '#ffd700' : '#cbd5e1'}"` : ''}>
+                        ${carta.fullImg ? `<img class="card-bg-img" src="${carta.img}" alt="">` : ''}
+                        <div class="card-header">
+                            <span class="card-rarity">${carta.rarity}</span>
+                            ${logoSVG}
+                        </div>
+                        <div class="card-photo-area">
+                            ${carta.img && !carta.fullImg ? `<img src="${carta.img}" alt="">` : `<svg class="silhouette" viewBox="0 0 24 24"><path d="M12,4A4,4 0 0,1 16,8A4,4 0 0,1 12,12A4,4 0 0,1 8,8A4,4 0 0,1 12,4M12,14C16.42,14 20,15.79 20,18V20H4V18C4,15.79 7.58,14 12,14Z"/></svg>`}
+                        </div>
+                        <div class="player-data">
+                            <div class="player-name">${carta.name}</div>
+                            <div class="player-meta">${carta.meta}</div>
+                            <div class="stats-grid">
+                                <div class="stat-el"><span class="stat-num">${carta.s1.split(" ")[0]}</span><span class="stat-lbl">${carta.s1.split(" ")[1]}</span></div>
+                                <div class="stat-el"><span class="stat-num">${carta.s2.split(" ")[0]}</span><span class="stat-lbl">${carta.s2.split(" ")[1]}</span></div>
+                                <div class="stat-el"><span class="stat-num">${carta.s3.split(" ")[0]}</span><span class="stat-lbl">${carta.s3.split(" ")[1]}</span></div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                const back = document.createElement('div');
+                back.classList.add('card-back');
+                back.innerHTML = `
+                    <div class="card-back-logo">HYPERION</div>
+                    <div class="card-back-title">MUNDIAL<br>DE CARTAS</div>
+                    <div class="card-back-stars">&#9733; &#9733; &#9733;</div>
+                    <div class="card-back-footer">EDICIÓN LIMITADA</div>
+                `;
+
+                inner.appendChild(front);
+                inner.appendChild(back);
+                wrapper.appendChild(inner);
+
+                if (carta.rarity === 'legendaria') {
+                    if (!carta.fullImg) {
+                        const fotoArea = wrapper.querySelector('.card-photo-area');
+                        if (fotoArea) crearBrillosEspeciales(fotoArea);
+                    }
+                    inner.addEventListener('animationend', () => {
+                        triggerLegendaryReveal(wrapper, carta.name);
+                    }, { once: true });
+                }
+
+                fragment.appendChild(wrapper);
+            });
+
+            container.appendChild(fragment);
+
+            document.getElementById('mainStage').classList.add('opened');
+            document.getElementById('hint').innerHTML = "¡Sobre abierto! Pasa el mouse para desplegar los brillos";
+        }
+
+        function closePack() {
+            document.getElementById('mainStage').classList.remove('opened');
+            document.getElementById('hint').innerHTML = "Haz clic en el sobre para abrirlo";
+        }
+    </script>
+</body>
+
+</html>
