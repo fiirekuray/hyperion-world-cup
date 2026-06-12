@@ -931,7 +931,152 @@
         .card-wrapper:hover .card.full-img::before {
             opacity: 0.75;
         }
-    </style>
+
+        /* --- RESPONSIVE --- */
+        @media (max-width: 768px) {
+            body {
+                padding: 70px 10px 20px;
+                justify-content: flex-start;
+            }
+
+            .page-header {
+                padding: 12px 14px;
+            }
+
+            .header-left {
+                font-size: 16px;
+                letter-spacing: 3px;
+            }
+
+            .header-right {
+                font-size: 10px;
+                letter-spacing: 1px;
+            }
+
+            .header-logo { width: 24px; height: 24px; }
+            .ball-spin { width: 22px; height: 22px; }
+
+            .stage {
+                height: auto;
+                min-height: 420px;
+                flex-direction: column;
+                gap: 20px;
+                padding: 10px 0;
+            }
+
+            .stage.opened {
+                gap: 14px;
+            }
+
+            .pack-wrapper {
+                position: relative;
+            }
+
+            .pack {
+                width: 220px;
+                height: 320px;
+            }
+
+            .pack-title {
+                font-size: 18px;
+                letter-spacing: 3px;
+            }
+
+            .pack-layout {
+                padding: 20px 14px;
+            }
+
+            .pack-edition {
+                font-size: 8px;
+                letter-spacing: 4px;
+            }
+
+            .pack-footer {
+                font-size: 7px;
+                letter-spacing: 3px;
+            }
+
+            .logo-center-box img {
+                width: 70px;
+            }
+
+            .cards-container {
+                position: relative;
+                height: auto;
+                flex-wrap: wrap;
+                gap: 10px;
+                padding: 10px 0;
+            }
+
+            .card-wrapper {
+                width: 140px;
+                height: 200px;
+            }
+
+            .stats-panel {
+                min-width: unset;
+                width: 100%;
+                padding: 12px 10px;
+            }
+
+            .stats-row {
+                gap: 6px;
+                flex-wrap: wrap;
+                justify-content: center;
+            }
+
+            .stat-value {
+                font-size: 18px;
+            }
+
+            .stat-label {
+                font-size: 8px;
+            }
+
+            .album-nav {
+                gap: 8px;
+            }
+
+            .album-nav a {
+                font-size: 9px;
+                padding: 6px 14px;
+                letter-spacing: 1px;
+            }
+
+            .btn-reset {
+                font-size: 9px;
+                padding: 6px 14px;
+            }
+
+            .info-text {
+                font-size: 11px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .pack {
+                width: 180px;
+                height: 260px;
+            }
+
+            .card-wrapper {
+                width: 120px;
+                height: 172px;
+            }
+
+            .pack-title {
+                font-size: 15px;
+                letter-spacing: 2px;
+            }
+
+            .logo-center-box img {
+                width: 55px;
+            }
+
+            .pack-layout {
+                padding: 14px 10px;
+            }
+        }
 </head>
 
 <body>
