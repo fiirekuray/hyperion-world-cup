@@ -425,6 +425,32 @@
             z-index: 4;
         }
 
+        /* DISEÑO EXTRA STICKER (0.1%) */
+        .card.rarity-extra-sticker {
+            border-color: #ff2d95;
+            background: linear-gradient(135deg, #2a0015 0%, #4d0026 50%, #1a000d 100%);
+            animation: cardGlowSticker 2s infinite alternate cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        @keyframes cardGlowSticker {
+            0% { box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5), 0 0 10px rgba(255, 45, 149, 0.3); }
+            100% { box-shadow: 0 25px 45px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 45, 149, 0.8), 0 0 50px rgba(255, 100, 180, 0.4); }
+        }
+
+        .card.rarity-extra-sticker::after {
+            content: '';
+            position: absolute;
+            top: -100%;
+            left: -100%;
+            width: 300%;
+            height: 300%;
+            background: linear-gradient(120deg, rgba(255, 255, 255, 0) 40%, rgba(255, 100, 200, 0.4) 50%, rgba(255, 45, 149, 0.3) 55%, rgba(255, 255, 255, 0) 65%);
+            transform: rotate(15deg);
+            animation: holoSweep 3s infinite ease-in-out;
+            pointer-events: none;
+            z-index: 4;
+        }
+
         @keyframes holoSweep {
             0% {
                 transform: translate(-20%, -20%) rotate(15deg);
@@ -483,6 +509,11 @@
             background: #00d2ff;
         }
 
+        .card.rarity-extra-sticker .card-rarity {
+            background: #ff2d95;
+            text-shadow: 0 0 2px white;
+        }
+
         .card-logo-mini {
             width: 22px;
             height: 26px;
@@ -512,6 +543,11 @@
         .card.rarity-legendaria .card-photo-area {
             background: linear-gradient(to bottom, #70041e, #000);
             border-color: rgba(255, 215, 0, 0.3);
+        }
+
+        .card.rarity-extra-sticker .card-photo-area {
+            background: linear-gradient(to bottom, #4d0026, #000);
+            border-color: rgba(255, 45, 149, 0.3);
         }
 
         .silhouette {
@@ -565,6 +601,11 @@
             background: rgba(31, 0, 7, 0.6);
         }
 
+        .card.rarity-extra-sticker .player-data {
+            border-color: rgba(255, 45, 149, 0.25);
+            background: rgba(42, 0, 21, 0.6);
+        }
+
         .player-name {
             font-size: 12px;
             font-weight: 800;
@@ -604,6 +645,11 @@
         .card.rarity-legendaria .stat-num {
             color: var(--gold);
             text-shadow: 0 0 3px rgba(255, 215, 0, 0.4);
+        }
+
+        .card.rarity-extra-sticker .stat-num {
+            color: #ff2d95;
+            text-shadow: 0 0 3px rgba(255, 45, 149, 0.4);
         }
 
         .card.rarity-especial .stat-num {
@@ -863,6 +909,7 @@
         .stat-icon-escudo { color: #a855f7; }
         .stat-icon-especial { color: #00d2ff; }
         .stat-icon-legendaria { color: var(--gold); }
+        .stat-icon-extra-sticker { color: #ff2d95; }
 
         .stat-value {
             font-size: 22px;
@@ -1214,7 +1261,40 @@
 
             // --- ÍTEMS LEGENDARIOS ---
             { id: 51, name: "Balón Oficial", meta: "Ítem • World Cup", rarity: "legendaria", s1: "99 LEG", s2: "99 HIS", s3: "99 GLORY", img: "imagenes/Carta legendaria/Balon-Oficial.jpg", fullImg: true },
-            { id: 52, name: "Trofeo Oficial", meta: "Ítem • World Cup", rarity: "legendaria", s1: "99 LEG", s2: "99 HIS", s3: "99 GLORY", img: "imagenes/Carta legendaria/Trofeo-Oficial.jpg", fullImg: true }
+            { id: 52, name: "Trofeo Oficial", meta: "Ítem • World Cup", rarity: "legendaria", s1: "99 LEG", s2: "99 HIS", s3: "99 GLORY", img: "imagenes/Carta legendaria/Trofeo-Oficial.jpg", fullImg: true },
+
+            // --- NUEVAS CARTAS BASE ---
+            { id: 54, name: "Dart", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "82 TIR", s3: "83 PAS", img: "imagenes/Carta base/Dart-base.jpg", fullImg: true },
+            { id: 55, name: "Fooji", meta: "Jugadora • ???", rarity: "normal", s1: "83 RIT", s2: "85 TIR", s3: "81 PAS", img: "imagenes/Carta base/Fooji-base.jpg", fullImg: true },
+            { id: 56, name: "Hellkun", meta: "Jugadora • ???", rarity: "normal", s1: "86 RIT", s2: "84 TIR", s3: "82 PAS", img: "imagenes/Carta base/Hellkun-base.jpg", fullImg: true },
+            { id: 57, name: "Lesnar", meta: "Jugadora • ???", rarity: "normal", s1: "85 RIT", s2: "83 TIR", s3: "84 PAS", img: "imagenes/Carta base/Lesnar-base.jpg", fullImg: true },
+            { id: 58, name: "Pedro", meta: "Jugadora • ???", rarity: "normal", s1: "82 RIT", s2: "84 TIR", s3: "83 PAS", img: "imagenes/Carta base/Pedro-base.jpg", fullImg: true },
+            { id: 59, name: "Toji", meta: "Jugadora • ???", rarity: "normal", s1: "87 RIT", s2: "85 TIR", s3: "82 PAS", img: "imagenes/Carta base/Toji-base.jpg", fullImg: true },
+            { id: 60, name: "Winnie", meta: "Jugadora • ???", rarity: "normal", s1: "84 RIT", s2: "86 TIR", s3: "81 PAS", img: "imagenes/Carta base/Winnie-base.jpg", fullImg: true },
+
+            // --- NUEVAS CARTAS ESPECIALES ---
+            { id: 61, name: "Dart", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "87 TIR", s3: "88 PAS", img: "imagenes/Carta especial/Dart-especial.jpg", fullImg: true },
+            { id: 62, name: "Fooji", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "90 TIR", s3: "86 PAS", img: "imagenes/Carta especial/Fooji-especial.jpg", fullImg: true },
+            { id: 63, name: "Hellkun", meta: "Jugadora • ???", rarity: "especial", s1: "91 RIT", s2: "89 TIR", s3: "87 PAS", img: "imagenes/Carta especial/Hellkun-especial.jpg", fullImg: true },
+            { id: 64, name: "Lesnar", meta: "Jugadora • ???", rarity: "especial", s1: "90 RIT", s2: "88 TIR", s3: "89 PAS", img: "imagenes/Carta especial/Lesnar-especial.jpg", fullImg: true },
+            { id: 65, name: "Pedro", meta: "Jugadora • ???", rarity: "especial", s1: "88 RIT", s2: "89 TIR", s3: "87 PAS", img: "imagenes/Carta especial/Pedro-especial.jpg", fullImg: true },
+            { id: 66, name: "Toji", meta: "Jugadora • ???", rarity: "especial", s1: "92 RIT", s2: "89 TIR", s3: "88 PAS", img: "imagenes/Carta especial/Toji-especial.jpg", fullImg: true },
+            { id: 67, name: "Winnie", meta: "Jugadora • ???", rarity: "especial", s1: "89 RIT", s2: "91 TIR", s3: "86 PAS", img: "imagenes/Carta especial/Winnie-especial.jpg", fullImg: true },
+
+            // --- NUEVAS CARTAS LEGENDARIAS ---
+            { id: 68, name: "Ever", meta: "Jugadora • ???", rarity: "legendaria", s1: "96 RIT", s2: "95 TIR", s3: "94 PAS", img: "imagenes/Carta legendaria/Ever-legendaria.jpg", fullImg: true },
+            { id: 69, name: "Qiqi", meta: "Jugadora • ???", rarity: "legendaria", s1: "97 RIT", s2: "96 TIR", s3: "95 PAS", img: "imagenes/Carta legendaria/Qiqi-legendaria.jpg", fullImg: true },
+
+            // --- CARTAS DE SUERTE (comodines, solo en sobres) ---
+            { id: 100, name: "+10 Puntos", meta: "Comodín • Suerte", rarity: "escudo", s1: "10 PTS", s2: "SUE", s3: "BONUS", img: "imagenes/Cartas de suerte/+10 puntos.jpg", fullImg: true },
+            { id: 101, name: "+20 Puntos", meta: "Comodín • Suerte", rarity: "escudo", s1: "20 PTS", s2: "SUE", s3: "BONUS", img: "imagenes/Cartas de suerte/+20 puntos.jpg", fullImg: true },
+            { id: 102, name: "-10 Puntos", meta: "Comodín • Suerte", rarity: "escudo", s1: "-10 PTS", s2: "SUE", s3: "PENALTY", img: "imagenes/Cartas de suerte/-10 puntos.jpg", fullImg: true },
+            { id: 103, name: "-20 Puntos", meta: "Comodín • Suerte", rarity: "escudo", s1: "-20 PTS", s2: "SUE", s3: "PENALTY", img: "imagenes/Cartas de suerte/-20 puntos.jpg", fullImg: true },
+            { id: 104, name: "+1 Giro", meta: "Comodín • Suerte", rarity: "escudo", s1: "1X", s2: "GIRO", s3: "BONUS", img: "imagenes/Cartas de suerte/+1 giro.jpg", fullImg: true },
+            { id: 105, name: "+1 Giro Legendario", meta: "Comodín • Suerte", rarity: "escudo", s1: "1X", s2: "GIRO", s3: "LEGEND", img: "imagenes/Cartas de suerte/+1 giro legendario.jpg", fullImg: true },
+
+            // --- EXTRA STICKER (0.1%) ---
+            { id: 200, name: "Pinkchyu", meta: "Extra Sticker • ✦", rarity: "extra-sticker", s1: "99 SUP", s2: "99 RAR", s3: "99 COL", img: "imagenes/Carta extra sticker/Pinkchyu-extra-sticker.png", fullImg: true }
         ];
 
         // PARTÍCULAS DE FONDO
@@ -1248,12 +1328,13 @@
             document.getElementById('statLegendaria').textContent = stats.legendaria;
         }
 
-        // ALGORITMO GACHA (75% Normal, 15% Especial, 9% Escudo, 1% Legendaria)
+        // ALGORITMO GACHA (75% Normal, 15% Especial, 9% Escudo, 0.9% Legendaria, 0.1% Extra Sticker)
         function generarCartasSobre() {
             const poolNormal = poolCartas.filter(c => c.rarity === "normal");
             const poolEspecial = poolCartas.filter(c => c.rarity === "especial");
             const poolEscudo = poolCartas.filter(c => c.rarity === "escudo");
             const poolLegendario = poolCartas.filter(c => c.rarity === "legendaria");
+            const poolExtraSticker = poolCartas.filter(c => c.rarity === "extra-sticker");
 
             let seleccionadas = [];
 
@@ -1267,8 +1348,10 @@
                     poolDisponible = poolEspecial;
                 } else if (dadoRareza < 0.99) {
                     poolDisponible = poolEscudo;
-                } else {
+                } else if (dadoRareza < 0.999) {
                     poolDisponible = poolLegendario;
+                } else {
+                    poolDisponible = poolExtraSticker;
                 }
 
                 let permiteRepetir = Math.random() < 0.20;
@@ -1358,7 +1441,7 @@
                 front.classList.add('card-front');
 
                 front.innerHTML = `
-                    <div class="card rarity-${carta.rarity}${carta.fullImg ? ' full-img' : ''}"${carta.img ? ` style="border-color: ${carta.rarity === 'especial' ? '#00d2ff' : carta.rarity === 'escudo' ? '#a855f7' : carta.rarity === 'legendaria' ? '#ffd700' : '#cbd5e1'}"` : ''}>
+                    <div class="card rarity-${carta.rarity}${carta.fullImg ? ' full-img' : ''}"${carta.img ? ` style="border-color: ${carta.rarity === 'especial' ? '#00d2ff' : carta.rarity === 'escudo' ? '#a855f7' : carta.rarity === 'legendaria' ? '#ffd700' : carta.rarity === 'extra-sticker' ? '#ff2d95' : '#cbd5e1'}"` : ''}>
                         ${carta.fullImg ? `<img class="card-bg-img" src="${carta.img}" alt="">` : ''}
                         <div class="card-header">
                             <span class="card-rarity">${carta.rarity}</span>
@@ -1392,7 +1475,7 @@
                 inner.appendChild(back);
                 wrapper.appendChild(inner);
 
-                if (carta.rarity === 'legendaria') {
+                if (carta.rarity === 'legendaria' || carta.rarity === 'extra-sticker') {
                     if (!carta.fullImg) {
                         const fotoArea = wrapper.querySelector('.card-photo-area');
                         if (fotoArea) crearBrillosEspeciales(fotoArea);
